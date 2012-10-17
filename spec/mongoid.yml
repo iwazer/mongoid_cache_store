@@ -1,0 +1,10 @@
+test:
+  sessions:
+    default:
+      database: mongoid_cache_store_test
+      hosts:
+        - localhost:37017
+      options:
+        safe: true
+  options:
+    allow_dynamic_fields: false
