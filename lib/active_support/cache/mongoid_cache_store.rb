@@ -7,6 +7,10 @@ module ActiveSupport
 
       class CacheStore
         include Mongoid::Document
+
+        attr_accessible :_id
+
+        field :id, type: String
       end
 
       def initialize collection_name='rails_cache_store'

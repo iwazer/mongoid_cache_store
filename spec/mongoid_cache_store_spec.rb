@@ -22,4 +22,20 @@ describe MongoidCacheStore::CacheStore do
       MongoidCacheStore::CacheStore.collection_name.to_s.should eql('rails_cache_store')
     end
   end
+
+  describe "id field" do
+    def create
+      MongoidCacheStore::CacheStore.create(_id: "KEY_STRING")
+    end
+    let(:model) { create }
+    it "should be able to store as cache key" do
+      model.reload.id.should eql("KEY_STRING")
+    end
+    before do
+      model
+    end
+    it "should be unique field" do
+      expect { create }.to raise_error(/duplicate key/)
+    end
+  end
 end
