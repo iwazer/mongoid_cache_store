@@ -12,3 +12,14 @@ describe MongoidCacheStore do
     end
   end
 end
+
+describe MongoidCacheStore::CacheStore do
+  context "when create MongoidCacheStore without collection_name" do
+    before do
+      MongoidCacheStore.new
+    end
+    it "should be stored in 'rails_cache_store' collection" do
+      MongoidCacheStore::CacheStore.collection_name.to_s.should eql('rails_cache_store')
+    end
+  end
+end

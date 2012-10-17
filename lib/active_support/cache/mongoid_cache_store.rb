@@ -5,8 +5,13 @@ module ActiveSupport
   module Cache
     class MongoidCacheStore < Store
 
+      class CacheStore
+        include Mongoid::Document
+      end
+
       def initialize collection_name='rails_cache_store'
         @collection_name = collection_name
+        CacheStore.store_in(collection: @collection_name)
       end
 
     end
