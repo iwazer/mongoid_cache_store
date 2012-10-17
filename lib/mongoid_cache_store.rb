@@ -1,5 +1,4 @@
 require "mongoid_cache_store/version"
+require "active_support/cache/mongoid_cache_store"
 
-module MongoidCacheStore
-  # Your code goes here...
-end
+MongoidCacheStore = ActiveSupport::Cache::MongoidCacheStore

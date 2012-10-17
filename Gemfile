@@ -5,3 +5,4 @@ gemspec
 
 gem 'rspec'
 gem 'database_cleaner'
+gem 'pry'
