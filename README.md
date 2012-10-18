@@ -8,7 +8,7 @@ Mongoidの設定ファイル（mongoid.yml）で設定されたmongodが使用�
 
 Add this line to your application's Gemfile:
 
-    gem 'mongoid_cache_store', git: 'git://github.com/mapion/mongoid_cache_store.git'
+    gem 'mongoid_cache_store', git: 'git://github.com/iwazer/mongoid_cache_store.git'
 
 And then execute:
 
@@ -27,10 +27,11 @@ Or install it yourself as:
 `config.action_controller.perform_caching`を`true`にする必要があります）
 
 ```ruby
-config.cache_store = MongoidCacheStore.new(collection_name)
+config.cache_store = MongoidCacheStore.new(collection_name: 'hoge_cache_store', database_name: 'hoge_cache_db')
 ```
 
 `collection_name`を省略すると`"rails_cache_store"`を使用します。
+`database_name`を省略するとmongoid.ymlの設定値を使用します。
 
 <!--
 ## Contributing
