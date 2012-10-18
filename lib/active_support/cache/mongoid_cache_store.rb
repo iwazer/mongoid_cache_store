@@ -13,9 +13,8 @@ module ActiveSupport
         field :id, type: String
       end
 
-      def initialize collection_name='rails_cache_store'
-        @collection_name = collection_name
-        CacheStore.store_in(collection: @collection_name)
+      def initialize options={}
+        CacheStore.store_in(collection: options[:collection_name] || 'rails_cache_store')
       end
 
     end
