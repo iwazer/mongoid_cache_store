@@ -1,5 +1,4 @@
 # -*- encoding: utf-8 -*-
-require File.expand_path('../lib/mongoid_cache_store/version', __FILE__)
 
 Gem::Specification.new do |gem|
   gem.authors       = ["iwazer"]
