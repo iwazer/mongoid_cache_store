@@ -67,6 +67,13 @@ describe MongoidCacheStore do
           MongoidCacheStore::CacheStore.all.count.should == 0
         end
       end
+
+      describe "#read_entry" do
+        let(:key_0) { store.__send__(:read_entry, "key_0") }
+        it "should not read" do
+          key_0.should be_nil
+        end
+      end
     end
 
     context "when several data is expiration" do
@@ -87,6 +94,21 @@ describe MongoidCacheStore do
           MongoidCacheStore::CacheStore.all.count.should == 0
         end
       end
+
+      describe "#read_entry" do
+        context "expired data" do
+          let(:key_0) { store.__send__(:read_entry, "key_0") }
+          it "should not read" do
+            key_0.should be_nil
+          end
+        end
+        context "lived data" do
+          let(:key_4) { store.__send__(:read_entry, "key_4") }
+          it "should read" do
+            key_4.should_not be_nil
+          end
+        end
+      end
     end
 
     context "when no data is expiration" do
@@ -105,6 +127,21 @@ describe MongoidCacheStore do
         before { store.clear }
         it "should all data is delete" do
           MongoidCacheStore::CacheStore.all.count.should == 0
+        end
+      end
+
+      describe "#read_entry" do
+        let(:key_2) { store.__send__(:read_entry, "key_2") }
+        it "should read" do
+          key_2.should_not be_nil
+        end
+      end
+    end
+
+    describe "#write_entry" do
+      context "when the key which does not exist yet" do
+        it "should return true" do
+          store.__send__(:write_entry, "INITIAL KEY", ActiveSupport::Cache::Entry.new("VALUE"), {expires_in: 1.hour}).should be_true
         end
       end
     end

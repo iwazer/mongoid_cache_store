@@ -39,6 +39,16 @@ module ActiveSupport
         CacheStore.delete_all
       end
 
+      def read_entry key, options=nil
+        doc = CacheStore.where(_id: key).gt(expires: Time.now).first
+        ActiveSupport::Cache::Entry.new(unpack(doc.data)) if doc
+      end
+
+      def write_entry key, entry, options
+        expires = Time.now + options[:expires_in]
+        CacheStore.create(_id: key, data: pack(entry.value), expires: expires).present?
+      end
+
       private
 
       def pack data
