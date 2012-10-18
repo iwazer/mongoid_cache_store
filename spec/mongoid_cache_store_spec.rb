@@ -35,37 +35,67 @@ describe MongoidCacheStore do
   context "override ActiveSupport::Cache::Store" do
     let!(:store) { MongoidCacheStore.new }
     let(:base_time) { Time.parse('2012-01-01 13:00:00') }
-    describe "#cleanup" do
-      before do
-        5.times do |n|
-          MongoidCacheStore::CacheStore.create(_id: "key_#{n}", expires: base_time + n.hour)
-        end
+    def create_data
+      5.times do |n|
+        MongoidCacheStore::CacheStore.create(_id: "key_#{n}", expires: base_time + n.hour)
       end
-      context "when all cache is expiration" do
-        before do
-          Time.should_receive(:now).any_number_of_times.and_return(base_time + 5.hour)
-          store.cleanup
-        end
+    end
+    context "when all cache is expiration" do
+      before do
+        create_data
+        Time.should_receive(:now).any_number_of_times.and_return(base_time + 5.hour)
+      end
+      describe "#cleanup" do
+        before { store.cleanup }
         it "should all data is delete" do
           MongoidCacheStore::CacheStore.all.count.should == 0
         end
       end
-      context "when several data is expiration" do
-        before do
-          Time.should_receive(:now).any_number_of_times.and_return(base_time + 2.hour)
-          store.cleanup
+
+      describe "#clear" do
+        before { store.clear }
+        it "should all data is delete" do
+          MongoidCacheStore::CacheStore.all.count.should == 0
         end
+      end
+    end
+
+    context "when several data is expiration" do
+      before do
+        create_data
+        Time.should_receive(:now).any_number_of_times.and_return(base_time + 2.hour)
+      end
+      describe "#cleanup" do
+        before { store.cleanup }
         it "should delete only expires data" do
           MongoidCacheStore::CacheStore.all.count.should == 3
         end
       end
-      context "when no data is expiration" do
-        before do
-          Time.should_receive(:now).any_number_of_times.and_return(base_time)
-          store.cleanup
+
+      describe "#clear" do
+        before { store.clear }
+        it "should all data is delete" do
+          MongoidCacheStore::CacheStore.all.count.should == 0
         end
+      end
+    end
+
+    context "when no data is expiration" do
+      before do
+        create_data
+        Time.should_receive(:now).any_number_of_times.and_return(base_time)
+      end
+      describe "#cleanup" do
+        before { store.cleanup }
         it "should be remain all data" do
           MongoidCacheStore::CacheStore.all.count.should == 5
+        end
+      end
+
+      describe "#clear" do
+        before { store.clear }
+        it "should all data is delete" do
+          MongoidCacheStore::CacheStore.all.count.should == 0
         end
       end
     end

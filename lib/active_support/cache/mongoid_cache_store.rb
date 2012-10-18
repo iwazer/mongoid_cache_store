@@ -35,6 +35,10 @@ module ActiveSupport
         CacheStore.lt(expires: Time.now).delete
       end
 
+      def clear
+        CacheStore.delete_all
+      end
+
     end
   end
 end
