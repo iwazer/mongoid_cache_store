@@ -31,6 +31,45 @@ describe MongoidCacheStore do
       end
     end
   end
+
+  context "override ActiveSupport::Cache::Store" do
+    let!(:store) { MongoidCacheStore.new }
+    let(:base_time) { Time.parse('2012-01-01 13:00:00') }
+    describe "#cleanup" do
+      before do
+        5.times do |n|
+          MongoidCacheStore::CacheStore.create(_id: "key_#{n}", expires: base_time + n.hour)
+        end
+      end
+      context "when all cache is expiration" do
+        before do
+          Time.should_receive(:now).any_number_of_times.and_return(base_time + 5.hour)
+          store.cleanup
+        end
+        it "should all data is delete" do
+          MongoidCacheStore::CacheStore.all.count.should == 0
+        end
+      end
+      context "when several data is expiration" do
+        before do
+          Time.should_receive(:now).any_number_of_times.and_return(base_time + 2.hour)
+          store.cleanup
+        end
+        it "should delete only expires data" do
+          MongoidCacheStore::CacheStore.all.count.should == 3
+        end
+      end
+      context "when no data is expiration" do
+        before do
+          Time.should_receive(:now).any_number_of_times.and_return(base_time)
+          store.cleanup
+        end
+        it "should be remain all data" do
+          MongoidCacheStore::CacheStore.all.count.should == 5
+        end
+      end
+    end
+  end
 end
 
 describe MongoidCacheStore::CacheStore do

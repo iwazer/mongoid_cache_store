@@ -31,6 +31,10 @@ module ActiveSupport
         CacheStore.default_expires_in = options[:expires_in] || DEFAULT_EXPIRES_IN
       end
 
+      def cleanup
+        CacheStore.lt(expires: Time.now).delete
+      end
+
     end
   end
 end
