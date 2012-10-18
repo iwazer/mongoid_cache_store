@@ -54,6 +54,10 @@ module ActiveSupport
         end
       end
 
+      def delete_entry key, options=nil
+        CacheStore.where(_id: key).delete
+      end
+
       private
 
       def pack data

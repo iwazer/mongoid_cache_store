@@ -74,6 +74,16 @@ describe MongoidCacheStore do
           key_0.should be_nil
         end
       end
+
+      describe "#delete_entry" do
+        let!(:key_0) { store.__send__(:delete_entry, "key_0") }
+        it "should return true" do
+          key_0.should be_true
+        end
+        it "should be deleted" do
+          MongoidCacheStore::CacheStore.where(_id: "key_0").first.should be_nil
+        end
+      end
     end
 
     context "when several data is expiration" do
@@ -134,6 +144,16 @@ describe MongoidCacheStore do
         let(:key_2) { store.__send__(:read_entry, "key_2") }
         it "should read" do
           key_2.should_not be_nil
+        end
+      end
+
+      describe "#delete_entry" do
+        let!(:key_2) { store.__send__(:delete_entry, "key_2") }
+        it "should return true" do
+          key_2.should be_true
+        end
+        it "should be deleted" do
+          MongoidCacheStore::CacheStore.where(_id: "key_2").first.should be_nil
         end
       end
     end
