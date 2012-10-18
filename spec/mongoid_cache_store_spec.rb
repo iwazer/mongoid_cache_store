@@ -32,6 +32,15 @@ describe MongoidCacheStore do
     end
   end
 
+  describe "#pack/#unpack" do
+    let!(:store) { MongoidCacheStore.new }
+    [nil,"STRING",:SYMBOL,100,0.05,Time.now,{},{a:1,b:1},[],[:a,:b],{a:[1,2,{x:'x',y:'y'},3]}].each do |value|
+      it "shuld be able to restore #{value.inspect}" do
+        store.__send__(:unpack, store.__send__(:pack, value)).should eql(value)
+      end
+    end
+  end
+
   context "override ActiveSupport::Cache::Store" do
     let!(:store) { MongoidCacheStore.new }
     let(:base_time) { Time.parse('2012-01-01 13:00:00') }

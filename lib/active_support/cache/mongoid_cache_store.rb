@@ -39,6 +39,15 @@ module ActiveSupport
         CacheStore.delete_all
       end
 
+      private
+
+      def pack data
+        Moped::BSON::Binary.new(:generic,Marshal.dump(data))
+      end
+
+      def unpack packed
+        Marshal.load(StringIO.new(packed.to_s))
+      end
     end
   end
 end
