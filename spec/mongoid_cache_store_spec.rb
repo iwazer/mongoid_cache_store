@@ -57,4 +57,13 @@ describe MongoidCacheStore::CacheStore do
       end
     end
   end
+
+  describe "data field" do
+    context "when data field is not specified" do
+      let (:cache_store) { MongoidCacheStore::CacheStore.create(_id: "KEY_STRING") }
+      it "empty hash should be stored" do
+        Marshal.load(StringIO.new(cache_store.reload.data.to_s)).should eql({})
+      end
+    end
+  end
 end

@@ -14,6 +14,7 @@ module ActiveSupport
 
         field :id, type: String
         field :expires, type: DateTime, default: -> { Time.now + self.class.default_expires_in }
+        field :data, type: Moped::BSON::Binary, default: Moped::BSON::Binary.new(:generic,Marshal.dump({}))
 
         def self.default_expires_in= value
           @default_expires_in = value
