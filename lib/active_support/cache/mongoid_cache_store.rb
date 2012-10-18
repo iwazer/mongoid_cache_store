@@ -10,7 +10,7 @@ module ActiveSupport
         include Mongoid::Document
         @default_expires_in = DEFAULT_EXPIRES_IN
 
-        attr_accessible :_id
+        attr_accessible :_id, :expires, :data
 
         field :id, type: String
         field :expires, type: DateTime, default: -> { Time.now + self.class.default_expires_in }

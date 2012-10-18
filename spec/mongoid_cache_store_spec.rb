@@ -70,6 +70,9 @@ describe MongoidCacheStore::CacheStore do
         c.reload.expires.should == now_time + expires_in
       end
     end
+    it "should be storeable value" do
+      MongoidCacheStore::CacheStore.create(_id: "KEY_STRING", expires: now_time).reload.expires.should == now_time
+    end
   end
 
   describe "data field" do
@@ -78,6 +81,10 @@ describe MongoidCacheStore::CacheStore do
       it "empty hash should be stored" do
         Marshal.load(StringIO.new(cache_store.reload.data.to_s)).should eql({})
       end
+    end
+    it "should be storeable value" do
+      c = MongoidCacheStore::CacheStore.create(_id: "KEY_STRING", data: Moped::BSON::Binary.new(:generic,Marshal.dump("STRING_VALUE")))
+      Marshal.load(StringIO.new(c.reload.data.to_s)).should eql("STRING_VALUE")
     end
   end
 end
