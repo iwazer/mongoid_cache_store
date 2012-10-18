@@ -139,9 +139,26 @@ describe MongoidCacheStore do
     end
 
     describe "#write_entry" do
+      let(:base_time) { Time.parse('2012-01-01 13:00:00') }
+      before { Time.should_receive(:now).any_number_of_times.and_return(base_time) }
+      let!(:stored) { store.__send__(:write_entry, "INITIAL KEY", ActiveSupport::Cache::Entry.new("VALUE"), {expires_in: 1.hour}) }
       context "when the key which does not exist yet" do
         it "should return true" do
-          store.__send__(:write_entry, "INITIAL KEY", ActiveSupport::Cache::Entry.new("VALUE"), {expires_in: 1.hour}).should be_true
+          stored.should be_true
+        end
+        it "should be stored" do
+          MongoidCacheStore::CacheStore.where(_id: "INITIAL KEY").first.should_not be_nil
+        end
+      end
+
+      context "when the key which does exist" do
+        let!(:second) { store.__send__(:write_entry, "INITIAL KEY", ActiveSupport::Cache::Entry.new("VALUE 2"), {expires_in: 24.hours}) }
+        it "should return true" do
+          second.should be_true
+        end
+        it "should be updated at expires" do
+          stored = MongoidCacheStore::CacheStore.where(_id: "INITIAL KEY").first
+          stored.expires == base_time + 24.hours
         end
       end
     end

@@ -46,7 +46,12 @@ module ActiveSupport
 
       def write_entry key, entry, options
         expires = Time.now + options[:expires_in]
-        CacheStore.create(_id: key, data: pack(entry.value), expires: expires).present?
+        doc = CacheStore.where(_id: key).first
+        if doc
+          doc.update_attributes(data: pack(entry.value), expires: expires)
+        else
+          CacheStore.create(_id: key, data: pack(entry.value), expires: expires).present?
+        end
       end
 
       private
