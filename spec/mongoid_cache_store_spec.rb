@@ -156,6 +156,15 @@ describe MongoidCacheStore do
           MongoidCacheStore::CacheStore.where(_id: "key_2").first.should be_nil
         end
       end
+
+      describe "#delete_matched" do
+        before { store.__send__(:delete_matched, %r{key_[0-2]}) }
+        it "should be deleted" do
+          MongoidCacheStore::CacheStore.where(_id: "key_0").first.should be_nil
+          MongoidCacheStore::CacheStore.where(_id: "key_1").first.should be_nil
+          MongoidCacheStore::CacheStore.where(_id: "key_2").first.should be_nil
+        end
+      end
     end
 
     describe "#write_entry" do

@@ -58,6 +58,10 @@ module ActiveSupport
         CacheStore.where(_id: key).delete
       end
 
+      def delete_matched pattern, options=nil
+        CacheStore.any_of(_id: pattern).delete
+      end
+
       private
 
       def pack data
