@@ -10,10 +10,24 @@ describe MongoidCacheStore do
       end
     end
 
+    context "when omit database_name" do
+      before { MongoidCacheStore.new }
+      it "should be setting value in mongoid.yml" do
+        MongoidCacheStore::CacheStore.database_name.to_s.should eql('mongoid_cache_store_test')
+      end
+    end
+
     context "with collection_name" do
       before { MongoidCacheStore.new(collection_name: 'cache_store_collection') }
       it "should be specified collection" do
         MongoidCacheStore::CacheStore.collection_name.to_s.should eql('cache_store_collection')
+      end
+    end
+
+    context "with database_name" do
+      before { MongoidCacheStore.new(database_name: 'cache_store_db') }
+      it "should be specified database" do
+        MongoidCacheStore::CacheStore.database_name.to_s.should eql('cache_store_db')
       end
     end
   end

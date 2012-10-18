@@ -25,7 +25,9 @@ module ActiveSupport
       end
 
       def initialize options={}
-        CacheStore.store_in(collection: options[:collection_name] || 'rails_cache_store')
+        store_opts = {collection: options[:collection_name] || 'rails_cache_store'}
+        store_opts.merge!(database: options[:database_name]) if options[:database_name].present?
+        CacheStore.store_in(store_opts)
         CacheStore.default_expires_in = options[:expires_in] || DEFAULT_EXPIRES_IN
       end
 
