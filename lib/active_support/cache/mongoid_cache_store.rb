@@ -25,6 +25,7 @@ module ActiveSupport
       end
 
       def initialize options={}
+        super
         store_opts = {collection: options[:collection_name] || 'rails_cache_store'}
         store_opts.merge!(database: options[:database_name]) if options[:database_name].present?
         CacheStore.store_in(store_opts)
