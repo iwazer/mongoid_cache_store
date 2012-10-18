@@ -48,5 +48,13 @@ describe MongoidCacheStore::CacheStore do
         c.reload.expires.should == now_time + MongoidCacheStore::DEFAULT_EXPIRES_IN
       end
     end
+    context "MongoidCacheStore#new with expires_in: 1.hour option" do
+      let(:expires_in) { 1.hour }
+      let!(:store) { MongoidCacheStore.new(expires_in: expires_in) }
+      it "should set current time + 1.hour as default" do
+        c = MongoidCacheStore::CacheStore.create(_id: "KEY_STRING")
+        c.reload.expires.should == now_time + expires_in
+      end
+    end
   end
 end

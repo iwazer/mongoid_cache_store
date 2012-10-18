@@ -8,15 +8,24 @@ module ActiveSupport
 
       class CacheStore
         include Mongoid::Document
+        @default_expires_in = DEFAULT_EXPIRES_IN
 
         attr_accessible :_id
 
         field :id, type: String
-        field :expires, type: DateTime, default: -> { Time.now + DEFAULT_EXPIRES_IN }
+        field :expires, type: DateTime, default: -> { Time.now + self.class.default_expires_in }
+
+        def self.default_expires_in= value
+          @default_expires_in = value
+        end
+        def self.default_expires_in
+          @default_expires_in
+        end
       end
 
       def initialize options={}
         CacheStore.store_in(collection: options[:collection_name] || 'rails_cache_store')
+        CacheStore.default_expires_in = options[:expires_in] || DEFAULT_EXPIRES_IN
       end
 
     end
