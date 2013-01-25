@@ -190,6 +190,17 @@ describe MongoidCacheStore do
           stored.expires == base_time + 24.hours
         end
       end
+
+      context "when omit expires_in" do
+        let!(:second) { store.__send__(:write_entry, "INITIAL KEY", ActiveSupport::Cache::Entry.new("VALUE 2"), {}) }
+        it "should return true" do
+          second.should be_true
+        end
+        it "should be updated at default expires" do
+          stored = MongoidCacheStore::CacheStore.where(_id: "INITIAL KEY").first
+          stored.expires == base_time + ActiveSupport::Cache::MongoidCacheStore::DEFAULT_EXPIRES_IN
+        end
+      end
     end
   end
 end
