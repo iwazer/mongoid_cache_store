@@ -12,8 +12,8 @@ Gem::Specification.new do |gem|
   gem.test_files    = gem.files.grep(%r{^(test|spec|features)/})
   gem.name          = "mongoid_cache_store"
   gem.require_paths = ["lib"]
-  gem.version       = "0.1.0"
+  gem.version       = "0.1.1"
 
   gem.add_dependency("activesupport", ["~> 3.2"])
-  gem.add_dependency("mongoid", ["~> 3.0"])
+  gem.add_dependency("mongoid", ["~> 3.1"])
 end
