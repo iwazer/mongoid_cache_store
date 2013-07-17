@@ -29,7 +29,7 @@ module ActiveSupport
         store_opts = {collection: options[:collection_name] || 'rails_cache_store'}
         store_opts.merge!(database: options[:database_name]) if options[:database_name].present?
         CacheStore.store_in(store_opts)
-        CacheStore.default_expires_in = options[:expires_in] || DEFAULT_EXPIRES_IN
+        CacheStore.default_expires_in = (options[:expires_in] || DEFAULT_EXPIRES_IN).to_i
       end
 
       def cleanup
@@ -46,7 +46,7 @@ module ActiveSupport
       end
 
       def write_entry key, entry, options
-        expires = Time.now + (options[:expires_in] || DEFAULT_EXPIRES_IN)
+        expires = Time.now + (options[:expires_in] || self.class.default_expires_in).to_i
         doc = CacheStore.where(_id: key).first
         if doc
           doc.update_attributes(data: pack(entry.value), expires: expires)
